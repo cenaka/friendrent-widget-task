@@ -1,0 +1,44 @@
+body {
+    font-family: 'Open Sans', Helvetica, Arial, sans-srif;
+}
+.advertise{
+    width:286px;
+    height:60px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    padding: 5px;
+    /*border:2px solid grey;*/
+    border-radius:5px;
+}
+.advertise:hover{
+    background-color: #FFFFF0;
+}
+
+.price {
+    font-size: 14px;
+    font-weight: 600;
+    display:inline;
+}
+a {
+    font-weight:400;
+    margin:0;
+    display:inline;
+    font-size: 130%;
+    padding-right: 10px;
+    color: #428bca;
+    text-decoration: none;
+}
+.time {
+    color: #8b8b8b;
+    font-size: 13px;
+}
+.description {
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;  
+}
+.ads {
+  height: 200px; /* or whatever height you need */
+  overflow-y: scroll;
+}
