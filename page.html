@@ -6,85 +6,55 @@
        <link href="style.css" rel="stylesheet">
     </head>
     <body>
-        <div class="ads">
+        <div id="ads">
+            <div class="advertise">
+                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
+                <div class="price"> 20000 &#8381</div>
+                <div class="description">ст.м. Академическая, пр-т Науки 17</div>
+                <div class="time">20 июля 2015</div>
+            </div>
 
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
-        <div class="advertise">
-            <div class="header"></div>
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-            <div class="description">ст.м. Академическая, пр-т Науки 17 </div>
-            <div class="time">20 июля 2015</div>
-        </div>
         </div>
     </body>
+    <script type="application/javascript">
+
+        var ads = {
+            'advertises': [
+                {
+                    'type': 'flat',
+                    'price': 20000,
+                    'desc': 'Метро Академическая',
+                    'time': '20 июля 2015 года',
+                    'url': "http://friendrent.ru/"
+                }
+            ]
+        };
+        function createDivElement(className, textContent) {
+            var newDivElement = document.createElement('div');
+            newDivElement.className = className;
+            newDivElement.textContent = textContent;
+            return newDivElement;
+        }
+        function createAElement(target, url, textContent) {
+            var newAElement = document.createElement('a');
+            newAElement.target = target;
+            newAElement.href = url;
+            newAElement.textContent = textContent;
+
+        }
+        function addAdvertise(advertise) {
+            var list = document.getElementById("ads");
+            var newHTMLAddvertise = document.createElement('div');
+            newHTMLAddvertise.className = 'advertise';
+            var type = createAElement("_blank", advertise.url, advertise.type);
+            var price = createDivElement('price', advertise.price + ' ₽');
+            var desc = createDivElement('description', advertise.desc);
+            var time = createDivElement('time', advertise.time);
+            newHTMLAddvertise.appendChild(type);
+            newHTMLAddvertise.appendChild(price);
+            newHTMLAddvertise.appendChild(desc);
+            newHTMLAddvertise.appendChild(time);
+            list.appendChild(newHTMLAddvertise)
+        }
+    </script>
 </html>
