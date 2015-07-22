@@ -2,28 +2,26 @@ body {
     font-family: 'Open Sans', Helvetica, Arial, sans-srif;
 }
 .advertise{
-    width:286px;
-    height:60px;
+    width: 286px;
+    height: 60px;
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
     padding: 5px;
-    /*border:2px solid grey;*/
     border-radius:5px;
 }
 .advertise:hover{
     background-color: #FFFFF0;
 }
-
 .price {
     font-size: 14px;
     font-weight: 600;
-    display:inline;
+    display: inline;
 }
 a {
-    font-weight:400;
-    margin:0;
-    display:inline;
+    font-weight: 400;
+    margin: 0;
+    display: inline;
     font-size: 130%;
     padding-right: 10px;
     color: #428bca;
@@ -41,4 +39,48 @@ a {
 #ads {
   height: 200px; /* or whatever height you need */
   overflow-y: scroll;
+}
+.hintInput {
+    color: #AAA;
+}
+.title {
+    /*font-weight: 400;*/
+    font-size: 130%;
+    color: #428bca;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+.filterForm {
+    width: 250px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.priceNumber input {
+    width: 90px;
+    padding: 5px;
+
+}
+.priceNumber {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.housingType {
+    margin-bottom: 10px;
+}
+#flat {
+    margin-left: 23px;
+}
+.gray {
+    color: #AAAAAA;
+}
+
+#options {
+   visibility: hidden;
+}
+.popup {
+    font-size: 100%;
+    padding: 5px !important;
 }

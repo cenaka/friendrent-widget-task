@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-       <title>Аренда недвижимости</title>
-       <meta charset="utf-8">
-       <link href="style.css" rel="stylesheet">
+        <title>Аренда недвижимости</title>
+        <meta charset="utf-8">
+        <link href="style.css" rel="stylesheet"/>
+        <link href="css/popup.css" rel="stylesheet">
     </head>
     <body>
+        <a href="#options" class="popup">изменить</a>
         <div id="ads">
             <div class="advertise">
                 <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
@@ -15,8 +17,58 @@
             </div>
 
         </div>
+
+        <div id="options">
+            <div class="filterForm">
+                <h1 class="title">Настройки</h1>
+
+                <form action="" method="post">
+                    <select class="cities_list">
+                        <option selected="selected">Выберите город</option>
+                        <option>Москва</option>
+                        <option>Санкт-Петербург</option>
+                        <option>Нижний Новгород</option>
+                        <option>Казань</option>
+                        <option>Ростов-на-Дону</option>
+                        <option>Волгоград</option>
+                        <option>Краснодар</option>
+                        <option>Саратов</option>
+                        <option>Самара</option>
+                        <option>Екатеринбург</option>
+                        <option>Челябинск</option>
+                        <option>Омск</option>
+                        <option>Новосибирск</option>
+                        <option>Красноярск</option>
+                        <option>Пермь</option>
+                        <option>Уфа</option>
+                    </select>
+
+                    <div class="priceNumber">
+                        <input type="text" id="priceFrom" name="priceFrom" onfocus="checkTextInputHint(this);"
+                               onblur="checkEmptyTextInput(this, 'Цена от');" value="Цена от" class="hintInput">
+                        <input type="text" id="priceTo" name="priceTo" onfocus="checkTextInputHint(this);"
+                               onblur="checkEmptyTextInput(this, 'до');" value="до" class="hintInput">
+                    </div>
+                    <div class="housingType">
+                        <input type="checkbox" name="room" value="room" id='room'>
+                        <label for="room">комната</label>
+                        <input type="checkbox" name="flat" value="flat" id="flat">
+                        <label for="flat">квартира</label>
+                    </div>
+                    <input type="button" value="Сбросить">
+                    <input type="button" id="submitBottom" value="Применить">
+                </form>
+            </div>
+        </div>
     </body>
+    <script src="js/jquery-2.1.4.js" type="application/javascript"></script>
+    <script src="js/jquery.popup.min.js" type="application/javascript"></script>
     <script type="application/javascript">
+        $("a.popup").popup(
+//                {
+//                    content: $("#options")
+//                }
+        );
 
         var ads = {
             'advertises': [
@@ -40,13 +92,24 @@
             newAElement.target = target;
             newAElement.href = url;
             newAElement.textContent = textContent;
+            return newAElement;
 
         }
+        function housingTypeConversion(serverType) {
+            if (serverType === 'flat') {
+                return ('Квартира');
+            } else if (serverType === 'room') {
+                return ('Комната');
+            } else {
+                return ('??????')
+            }
+        }
+
         function addAdvertise(advertise) {
             var list = document.getElementById("ads");
             var newHTMLAddvertise = document.createElement('div');
             newHTMLAddvertise.className = 'advertise';
-            var type = createAElement("_blank", advertise.url, advertise.type);
+            var type = createAElement('_blank', advertise.url, housingTypeConversion(advertise.type));
             var price = createDivElement('price', advertise.price + ' ₽');
             var desc = createDivElement('description', advertise.desc);
             var time = createDivElement('time', advertise.time);
@@ -56,5 +119,26 @@
             newHTMLAddvertise.appendChild(time);
             list.appendChild(newHTMLAddvertise)
         }
+        function addSeveralAdvertises(advertises) {
+            for (var i = 0; i < advertises.length; i++) {
+                addAdvertise(advertises[i]);
+            }
+        }
+
+
+        function checkTextInputHint(element) {
+            if (element.className == 'hintInput') {
+                element.value='';
+                element.className = '';
+            }
+        }
+
+        function checkEmptyTextInput(element, hintText) {
+            if (element.value === '' && element.className != 'hintInput') {
+                element.value = hintText;
+                element.className = 'hintInput';
+            }
+        }
+
     </script>
 </html>

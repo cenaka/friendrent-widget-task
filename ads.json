@@ -1,0 +1,11 @@
+{
+  "advertises": [
+    {
+      "type": "flat",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    }
+  ]
+}
