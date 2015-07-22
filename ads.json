@@ -6,6 +6,97 @@
       "desc": "Метро Академическая",
       "time": "20 июля 2015 года",
       "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "room",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://ya.ru/"
+    },
+    {
+      "type": "room",
+      "price": 25000,
+      "desc": "Метро Политехническая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 10000,
+      "desc": "Метро Владимирская",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "room",
+      "price": 20000,
+      "desc": "Метро Девяткино",
+      "time": "20 августа 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "room",
+      "price": 20000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2016",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "flat",
+      "price": 21000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
+    },
+    {
+      "type": "бвбвбв",
+      "price": 22000,
+      "desc": "Метро Академическая",
+      "time": "20 июля 2015 года",
+      "url": "http://friendrent.ru/"
     }
   ]
 }

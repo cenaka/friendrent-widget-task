@@ -37,8 +37,9 @@ a {
     color: #333;  
 }
 #ads {
-  height: 200px; /* or whatever height you need */
-  overflow-y: scroll;
+    height: 200px; /* or whatever height you need */
+    overflow-y: scroll;
+    width: 296px;
 }
 .hintInput {
     color: #AAA;
@@ -83,4 +84,8 @@ a {
 .popup {
     font-size: 100%;
     padding: 5px !important;
+}
+#moreButton {
+    margin: 5px auto;
+    display: block;
 }

@@ -15,14 +15,14 @@
                 <div class="description">ст.м. Академическая, пр-т Науки 17</div>
                 <div class="time">20 июля 2015</div>
             </div>
-
+            <button id="moreButton">Больше</button>
         </div>
 
         <div id="options">
             <div class="filterForm">
                 <h1 class="title">Настройки</h1>
 
-                <form action="" method="post">
+                <form action="" method="post" class="filterForm">
                     <select class="cities_list">
                         <option selected="selected">Выберите город</option>
                         <option>Москва</option>
@@ -55,7 +55,7 @@
                         <input type="checkbox" name="flat" value="flat" id="flat">
                         <label for="flat">квартира</label>
                     </div>
-                    <input type="button" value="Сбросить">
+                    <input type="button" id="reset" value="Сбросить">
                     <input type="button" id="submitBottom" value="Применить">
                 </form>
             </div>
@@ -69,18 +69,24 @@
 //                    content: $("#options")
 //                }
         );
+        $(document).ready(function() {
+            $('#moreButton').click(function() {
+                $.getJSON( "ads.json", function(data) {
+                    addSeveralAdvertises(data.advertises)
+                });
+            });
+            $('#reset').click(function() {
+                $('#room, #flat').val('').attr('checked', false);
+                $('select option:first').attr('selected','1');
+                makeTextInputHint(document.getElementById("priceFrom"), 'Цена от');
+                makeTextInputHint(document.getElementById("priceTo"), 'до');
 
-        var ads = {
-            'advertises': [
-                {
-                    'type': 'flat',
-                    'price': 20000,
-                    'desc': 'Метро Академическая',
-                    'time': '20 июля 2015 года',
-                    'url': "http://friendrent.ru/"
-                }
-            ]
-        };
+
+            })
+        });
+
+
+
         function createDivElement(className, textContent) {
             var newDivElement = document.createElement('div');
             newDivElement.className = className;
@@ -117,7 +123,7 @@
             newHTMLAddvertise.appendChild(price);
             newHTMLAddvertise.appendChild(desc);
             newHTMLAddvertise.appendChild(time);
-            list.appendChild(newHTMLAddvertise)
+            list.insertBefore(newHTMLAddvertise, document.getElementById("moreButton"));
         }
         function addSeveralAdvertises(advertises) {
             for (var i = 0; i < advertises.length; i++) {
@@ -138,6 +144,10 @@
                 element.value = hintText;
                 element.className = 'hintInput';
             }
+        }
+        function makeTextInputHint(element, hintText) {
+            element.value = hintText;
+            element.className = 'hintInput';
         }
 
     </script>
