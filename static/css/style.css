@@ -1,23 +1,27 @@
 body {
     font-family: 'Open Sans', Helvetica, Arial, sans-srif;
 }
-.advertise{
+
+.advertise {
     width: 286px;
     height: 60px;
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
     padding: 5px;
-    border-radius:5px;
+    border-radius: 5px;
 }
-.advertise:hover{
+
+.advertise:hover {
     background-color: #FFFFF0;
 }
+
 .price {
     font-size: 14px;
     font-weight: 600;
     display: inline;
 }
+
 a {
     font-weight: 400;
     margin: 0;
@@ -27,23 +31,28 @@ a {
     color: #428bca;
     text-decoration: none;
 }
+
 .time {
     color: #8b8b8b;
     font-size: 13px;
 }
+
 .description {
     font-size: 14px;
     line-height: 1.42857143;
-    color: #333;  
+    color: #333;
 }
+
 #ads {
-    height: 200px; /* or whatever height you need */
-    overflow-y: scroll;
+    height: 210px; /* or whatever height you need */
+    overflow-y: auto;
     width: 296px;
 }
+
 .hintInput {
     color: #AAA;
 }
+
 .title {
     /*font-weight: 400;*/
     font-size: 130%;
@@ -64,28 +73,50 @@ a {
     padding: 5px;
 
 }
+
 .priceNumber {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 .housingType {
     margin-bottom: 10px;
 }
+
 #flat {
     margin-left: 23px;
 }
+
 .gray {
     color: #AAAAAA;
 }
 
 #options {
-   visibility: hidden;
+    display: none;
+    background-color: #FFF;
 }
+
 .popup {
     font-size: 100%;
     padding: 5px !important;
 }
+
 #moreButton {
     margin: 5px auto;
     display: block;
+}
+
+.filterValue {
+
+}
+
+#lean_overlay {
+    position: fixed;
+    z-index: 100;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    display: none;
 }

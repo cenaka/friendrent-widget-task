@@ -3,18 +3,12 @@
     <head>
         <title>Аренда недвижимости</title>
         <meta charset="utf-8">
-        <link href="style.css" rel="stylesheet"/>
-        <link href="css/popup.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet"/>
     </head>
     <body>
-        <a href="#options" class="popup">изменить</a>
+        <p class="filterValue">Все города</p>
+        <a href="#options" id="optionsLink" class="popup">изменить</a>
         <div id="ads">
-            <div class="advertise">
-                <a target="__blank" href="http://friendrent.ru/"> Квартира </a>
-                <div class="price"> 20000 &#8381</div>
-                <div class="description">ст.м. Академическая, пр-т Науки 17</div>
-                <div class="time">20 июля 2015</div>
-            </div>
             <button id="moreButton">Больше</button>
         </div>
 
@@ -55,38 +49,47 @@
                         <input type="checkbox" name="flat" value="flat" id="flat">
                         <label for="flat">квартира</label>
                     </div>
-                    <input type="button" id="reset" value="Сбросить">
-                    <input type="button" id="submitBottom" value="Применить">
+                    <input type="button" id="reset" value="Сбросить" onclick="resetForm()">
+                    <input type="button" id="submitButton" value="Применить" onclick="submitChanges()">
                 </form>
             </div>
         </div>
     </body>
     <script src="js/jquery-2.1.4.js" type="application/javascript"></script>
-    <script src="js/jquery.popup.min.js" type="application/javascript"></script>
+    <script type="text/javascript" src="js/jquery.leanModal.min.js"></script>
     <script type="application/javascript">
-        $("a.popup").popup(
-//                {
-//                    content: $("#options")
-//                }
-        );
-        $(document).ready(function() {
-            $('#moreButton').click(function() {
-                $.getJSON( "ads.json", function(data) {
-                    addSeveralAdvertises(data.advertises)
-                });
-            });
-            $('#reset').click(function() {
-                $('#room, #flat').val('').attr('checked', false);
-                $('select option:first').attr('selected','1');
-                makeTextInputHint(document.getElementById("priceFrom"), 'Цена от');
-                makeTextInputHint(document.getElementById("priceTo"), 'до');
-
-
-            })
+        $("#optionsLink").leanModal({
+            closeButton: "#submitButton"
         });
 
+        var loadAdvertises = function() {
+            $.getJSON( "advertises", getParams(), function(data) {
+                addSeveralAdvertises(data.advertises);
+            });
+        }
+        $(document).ready(function() {
+            $('#moreButton').click(loadAdvertises);
+            loadAdvertises();
+        });
 
-
+        function getParams() {
+            result = {};
+            if ($('.cities_list').val() !== 'Выберите город') {
+                result.city = $('.cities_list').val();
+            }
+            if ($('#priceFrom').val() !== "Цена от") {
+                result.priceFrom = $('#priceFrom').val();
+            }
+            if ($('#priceTo').val() !== "до") {
+                result.priceTo = $('#priceTo').val();
+            }
+            if ($('#room').is(':checked') && !($('#flat').is(':checked'))) {
+                result.type = 'room'
+            } else if (!$('#room').is(':checked') && ($('#flat').is(':checked'))) {
+                result.type = 'flat'
+            }
+            return result
+        }
         function createDivElement(className, textContent) {
             var newDivElement = document.createElement('div');
             newDivElement.className = className;
@@ -102,9 +105,9 @@
 
         }
         function housingTypeConversion(serverType) {
-            if (serverType === 'flat') {
+            if (serverType === 'FLAT') {
                 return ('Квартира');
-            } else if (serverType === 'room') {
+            } else if (serverType === 'ROOM') {
                 return ('Комната');
             } else {
                 return ('??????')
@@ -118,7 +121,7 @@
             var type = createAElement('_blank', advertise.url, housingTypeConversion(advertise.type));
             var price = createDivElement('price', advertise.price + ' ₽');
             var desc = createDivElement('description', advertise.desc);
-            var time = createDivElement('time', advertise.time);
+            var time = createDivElement('time', new Date(advertise.time).toLocaleString("ru"));
             newHTMLAddvertise.appendChild(type);
             newHTMLAddvertise.appendChild(price);
             newHTMLAddvertise.appendChild(desc);
@@ -148,6 +151,35 @@
         function makeTextInputHint(element, hintText) {
             element.value = hintText;
             element.className = 'hintInput';
+        }
+        function resetForm() {
+            $('#room, #flat').val('').attr('checked', false);
+            $('select option:first').attr('selected','1');
+            makeTextInputHint(document.getElementById("priceFrom"), 'Цена от');
+            makeTextInputHint(document.getElementById("priceTo"), 'до');
+        }
+        function submitChanges() {
+            var result = "";
+            if ($('#room').is(':checked') && !($('#flat').is(':checked'))) {
+                result += "Комната, "
+            } else if (!$('#room').is(':checked') && ($('#flat').is(':checked'))) {
+                result += "Квартира, "
+            }
+            if ($('.cities_list').val() === 'Выберите город') {
+                result += "Все города"
+            } else {
+                result += $('.cities_list').val();
+            }
+            if ($('#priceFrom').val() !== 'Цена от') {
+                result += ' от ' + $('#priceFrom').val() + ' ₽';
+            }
+            if ($('#priceTo').val() !== 'до') {
+                result += ' до ' + $('#priceTo').val() + ' ₽';
+            }
+            $('.filterValue').text(result);
+            $('#ads').children().not('#moreButton').remove();
+            loadAdvertises();
+
         }
 
     </script>
