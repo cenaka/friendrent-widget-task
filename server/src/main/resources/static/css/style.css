@@ -106,10 +106,6 @@ a {
     display: block;
 }
 
-.filterValue {
-
-}
-
 #lean_overlay {
     position: fixed;
     z-index: 100;

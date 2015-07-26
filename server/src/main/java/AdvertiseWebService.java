@@ -22,36 +22,62 @@ public class AdvertiseWebService {
             Random random = new Random();
             String [] subwayName = new String[]{"Академическая", "Владимирская", "Автово", "Спортивная", "Чкаловская"};
             String [] streetName = new String[]{"пр-т Науки", "ул. Гидротехников", "ул. Свободы", "Владимирский пр-т", "ул. Достоевского"};
+            Map<String, Integer> citiesList = new HashMap<String, Integer>();
+            citiesList.put("Москва", 25);
+            citiesList.put("Уфа", 0);
+            citiesList.put("Казань", 30);
+            citiesList.put("Самара", 8);
 
 
             int number = 10;
             if (request.queryMap("number").hasValue()) {
                 number = request.queryMap("number").integerValue();
             }
+            int from = 0;
+            if (request.queryMap("from").hasValue()) {
+                from = request.queryMap("from").integerValue();
+            }
+            Date currentDate = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(currentDate);
+            cal.add(Calendar.HOUR, -from);
+            int numberOfAdvertises = 1000;
+            if (request.queryMap("city").hasValue()) {
+                String cityValue = request.queryMap("city").value();
+                if(citiesList.containsKey(cityValue))
+                    numberOfAdvertises = citiesList.get(cityValue);
+            }
+            if (numberOfAdvertises - from < number) {
+                number = numberOfAdvertises - from;
+            }
             for (int i = 0; i < number; i++) {
+
                 if (request.queryMap("type").hasValue()){
                     type = Advertise.Type.valueOf(request.queryMap("type").value().toUpperCase());
                 } else {
                     type = Advertise.Type.values()[random.nextInt(2)];
                 }
-                int from = 1, to = 50000;
+                int priceFrom = 1, priceTo = 50000;
                 if (request.queryMap("priceTo").hasValue()) {
-                    to = request.queryMap("priceTo").integerValue();
+                    priceTo = request.queryMap("priceTo").integerValue();
                 }
                 if (request.queryMap("priceFrom").hasValue()) {
-                    from = request.queryMap("priceFrom").integerValue();
+                    priceFrom = request.queryMap("priceFrom").integerValue();
                 }
-                if (from > to) {
+                if (priceFrom > priceTo) {
                     break;
                 }
-                price = from + random.nextInt((to - from + 1));
+                price = priceFrom + random.nextInt((priceTo - priceFrom + 1));
                 String desc = "м. " + subwayName[random.nextInt(subwayName.length)] + ", " +
                         streetName[random.nextInt(streetName.length)] + " " + (random.nextInt(100) + 1);
                 String url = "http://friendrent.ru/offer/" + (450000 + random.nextInt(1000));
-                Advertise ad = new Advertise(city, type, price, desc, new Date(), url);
+                cal.add(Calendar.HOUR,  -1);
+                Advertise ad = new Advertise(city, type, price, desc, cal.getTime(), url);
                 advertises.add(ad);
             }
             ads.put("advertises", advertises);
+
+            ads.put("advertisesLeft", numberOfAdvertises - from - number);
             return ads;
         }, new Gson()::toJson);
     }

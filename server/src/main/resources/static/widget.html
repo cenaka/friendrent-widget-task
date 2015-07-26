@@ -78,7 +78,7 @@
 
         function loadAdvertises() {
             $.getJSON("advertises", getFilterParams(), function(data) {
-                addAdvertises(data.advertises);
+                addAdvertises(data.advertises, data.advertisesLeft);
             });
         }
 
@@ -113,6 +113,7 @@
                 }
             }
             result.number = 10;
+            result.from = $('.advertise').length;
             return result
         }
         function createDivElement(className, textContent) {
@@ -154,8 +155,8 @@
             list.insertBefore(newHTMLAddvertise, document.getElementById("moreButton"));
         }
 
-        function addAdvertises(advertises) {
-            if (advertises.length == 0) {
+        function addAdvertises(advertises, advetisesLeft) {
+            if (advertises.length == 0 && advetisesLeft == 0) {
                 $('#moreButton').hide();
                 $('#ads').append("<p>По данному запросу объявлений нет</p>")
                 return ;
@@ -165,7 +166,7 @@
                 addAdvertise(advertises[i]);
             }
 
-            if (advertises.length < 10) {
+            if (advetisesLeft === 0) {
                 $('#moreButton').hide();
             } else {
                 $('#moreButton').show();
