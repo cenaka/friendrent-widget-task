@@ -11,6 +11,11 @@ import java.util.*;
 import static spark.Spark.*;
 
 public class AdvertiseWebService {
+
+    public static final Random RANDOM = new Random();
+    public static final String[] SUBWAY_NAMES = new String[]{"Академическая", "Владимирская", "Автово", "Спортивная", "Чкаловская"};
+    public static final String[] STREET_NAMES = new String[]{"пр-т Науки", "ул. Гидротехников", "ул. Свободы", "Владимирский пр-т", "ул. Достоевского"};
+
     public static void main(String[] args) {
         staticFileLocation("/static");
         get("/advertises", (request, response) -> {
@@ -19,15 +24,7 @@ public class AdvertiseWebService {
             String city = request.queryMap("city").value();
             Advertise.Type type;
             int price;
-            Random random = new Random();
-            String [] subwayName = new String[]{"Академическая", "Владимирская", "Автово", "Спортивная", "Чкаловская"};
-            String [] streetName = new String[]{"пр-т Науки", "ул. Гидротехников", "ул. Свободы", "Владимирский пр-т", "ул. Достоевского"};
-            Map<String, Integer> citiesList = new HashMap<String, Integer>();
-            citiesList.put("Москва", 25);
-            citiesList.put("Уфа", 0);
-            citiesList.put("Казань", 30);
-            citiesList.put("Самара", 8);
-
+            Map<String, Integer> citiesList = getNumberOfAdsMap();
 
             int number = 10;
             if (request.queryMap("number").hasValue()) {
@@ -55,9 +52,9 @@ public class AdvertiseWebService {
                 if (request.queryMap("type").hasValue()){
                     type = Advertise.Type.valueOf(request.queryMap("type").value().toUpperCase());
                 } else {
-                    type = Advertise.Type.values()[random.nextInt(2)];
+                    type = Advertise.Type.values()[RANDOM.nextInt(2)];
                 }
-                int priceFrom = 1, priceTo = 50000;
+                int priceFrom = 1, priceTo = 999999;
                 if (request.queryMap("priceTo").hasValue()) {
                     priceTo = request.queryMap("priceTo").integerValue();
                 }
@@ -67,10 +64,10 @@ public class AdvertiseWebService {
                 if (priceFrom > priceTo) {
                     break;
                 }
-                price = priceFrom + random.nextInt((priceTo - priceFrom + 1));
-                String desc = "м. " + subwayName[random.nextInt(subwayName.length)] + ", " +
-                        streetName[random.nextInt(streetName.length)] + " " + (random.nextInt(100) + 1);
-                String url = "http://friendrent.ru/offer/" + (450000 + random.nextInt(1000));
+                price = priceFrom + RANDOM.nextInt((priceTo - priceFrom + 1));
+                String desc = "м. " + SUBWAY_NAMES[RANDOM.nextInt(SUBWAY_NAMES.length)] + ", " +
+                        STREET_NAMES[RANDOM.nextInt(STREET_NAMES.length)] + " " + (RANDOM.nextInt(100) + 1);
+                String url = "http://friendrent.ru/offer/" + (450000 + RANDOM.nextInt(1000));
                 cal.add(Calendar.HOUR,  -1);
                 Advertise ad = new Advertise(city, type, price, desc, cal.getTime(), url);
                 advertises.add(ad);
@@ -80,6 +77,15 @@ public class AdvertiseWebService {
             ads.put("advertisesLeft", numberOfAdvertises - from - number);
             return ads;
         }, new Gson()::toJson);
+    }
+
+    private static Map<String, Integer> getNumberOfAdsMap() {
+        Map<String, Integer> citiesList = new HashMap<String, Integer>();
+        citiesList.put("Москва", 25);
+        citiesList.put("Уфа", 0);
+        citiesList.put("Казань", 30);
+        citiesList.put("Самара", 8);
+        return citiesList;
     }
 }
 
