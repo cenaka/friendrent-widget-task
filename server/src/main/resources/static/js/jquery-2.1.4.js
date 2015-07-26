@@ -8690,8 +8690,8 @@ jQuery.ajaxTransport( "script", function( s ) {
 					callback = function( evt ) {
 						script.remove();
 						callback = null;
-						if ( evt ) {
-							complete( evt.type === "error" ? 404 : 200, evt.type );
+						if ( e ) {
+							complete( e.type === "error" ? 404 : 200, e.type );
 						}
 					}
 				);
