@@ -4,6 +4,8 @@
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import spark.Request;
+
 import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,60 +25,83 @@ public class AdvertiseWebService {
             ArrayList<Advertise> advertises = new ArrayList<>();
             String city = request.queryMap("city").value();
             Advertise.Type type;
-            int price;
+            Integer price;
             Map<String, Integer> citiesList = getNumberOfAdsMap();
 
-            int number = 10;
-            if (request.queryMap("number").hasValue()) {
-                number = request.queryMap("number").integerValue();
-            }
-            int from = 0;
-            if (request.queryMap("from").hasValue()) {
-                from = request.queryMap("from").integerValue();
-            }
+            int number = getIntParameter(request, "number", 10);
+            int from = getIntParameter(request, "from", 0);
+
             Date currentDate = new Date();
             Calendar cal = Calendar.getInstance();
             cal.setTime(currentDate);
             cal.add(Calendar.HOUR, -from);
+
             int numberOfAdvertises = 1000;
+
             if (request.queryMap("city").hasValue()) {
                 String cityValue = request.queryMap("city").value();
-                if(citiesList.containsKey(cityValue))
+                if (citiesList.containsKey(cityValue))
                     numberOfAdvertises = citiesList.get(cityValue);
             }
             if (numberOfAdvertises - from < number) {
                 number = numberOfAdvertises - from;
             }
             for (int i = 0; i < number; i++) {
+                type = getType(request);
 
-                if (request.queryMap("type").hasValue()){
-                    type = Advertise.Type.valueOf(request.queryMap("type").value().toUpperCase());
-                } else {
-                    type = Advertise.Type.values()[RANDOM.nextInt(2)];
-                }
-                int priceFrom = 1, priceTo = 999999;
-                if (request.queryMap("priceTo").hasValue()) {
-                    priceTo = request.queryMap("priceTo").integerValue();
-                }
-                if (request.queryMap("priceFrom").hasValue()) {
-                    priceFrom = request.queryMap("priceFrom").integerValue();
-                }
-                if (priceFrom > priceTo) {
+                price = getPrice(request);
+                if (price == null) {
                     break;
                 }
-                price = priceFrom + RANDOM.nextInt((priceTo - priceFrom + 1));
-                String desc = "м. " + SUBWAY_NAMES[RANDOM.nextInt(SUBWAY_NAMES.length)] + ", " +
-                        STREET_NAMES[RANDOM.nextInt(STREET_NAMES.length)] + " " + (RANDOM.nextInt(100) + 1);
-                String url = "http://friendrent.ru/offer/" + (450000 + RANDOM.nextInt(1000));
-                cal.add(Calendar.HOUR,  -1);
+
+                String desc = getDescription();
+                String url = getUrl();
+                cal.add(Calendar.HOUR, -1);
                 Advertise ad = new Advertise(city, type, price, desc, cal.getTime(), url);
                 advertises.add(ad);
             }
             ads.put("advertises", advertises);
-
             ads.put("advertisesLeft", numberOfAdvertises - from - number);
             return ads;
         }, new Gson()::toJson);
+    }
+
+    private static Integer getPrice(Request request) {
+        int price;
+        int priceFrom = getIntParameter(request, "priceFrom", 1);
+        int priceTo = getIntParameter(request, "priceTo", 999999);
+        if (priceFrom > priceTo) {
+            return null;
+        }
+        price = priceFrom + RANDOM.nextInt((priceTo - priceFrom + 1));
+        return price;
+    }
+
+    private static String getUrl() {
+        return "http://friendrent.ru/offer/" + (450000 + RANDOM.nextInt(1000));
+    }
+
+    private static Advertise.Type getType(Request request) {
+        Advertise.Type type;
+        if (request.queryMap("type").hasValue()) {
+            type = Advertise.Type.valueOf(request.queryMap("type").value().toUpperCase());
+        } else {
+            type = Advertise.Type.values()[RANDOM.nextInt(2)];
+        }
+        return type;
+    }
+
+    private static String getDescription() {
+        return "м. " + SUBWAY_NAMES[RANDOM.nextInt(SUBWAY_NAMES.length)] + ", " +
+                            STREET_NAMES[RANDOM.nextInt(STREET_NAMES.length)] + " " + (RANDOM.nextInt(100) + 1);
+    }
+
+    private static int getIntParameter(Request request, String key, int defaultValue) {
+        int number = defaultValue;
+        if (request.queryMap(key).hasValue()) {
+            number = request.queryMap(key).integerValue();
+        }
+        return number;
     }
 
     private static Map<String, Integer> getNumberOfAdsMap() {
