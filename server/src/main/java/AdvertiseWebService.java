@@ -17,6 +17,7 @@ public class AdvertiseWebService {
     public static final Random RANDOM = new Random();
     public static final String[] SUBWAY_NAMES = new String[]{"Академическая", "Владимирская", "Автово", "Спортивная", "Чкаловская"};
     public static final String[] STREET_NAMES = new String[]{"пр-т Науки", "ул. Гидротехников", "ул. Свободы", "Владимирский пр-т", "ул. Достоевского"};
+    public static final int MAX_VALUE = 9999999;
 
     public static void main(String[] args) {
         staticFileLocation("/static");
@@ -69,9 +70,12 @@ public class AdvertiseWebService {
     private static Integer getPrice(Request request) {
         int price;
         int priceFrom = getIntParameter(request, "priceFrom", 1);
-        int priceTo = getIntParameter(request, "priceTo", 999999);
+        int priceTo = getIntParameter(request, "priceTo", MAX_VALUE);
         if (priceFrom > priceTo) {
             return null;
+        }
+        if (priceTo >= MAX_VALUE) {
+            priceTo = Math.max(50000, priceFrom + 20000);
         }
         price = priceFrom + RANDOM.nextInt((priceTo - priceFrom + 1));
         return price;
