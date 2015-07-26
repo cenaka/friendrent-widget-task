@@ -204,16 +204,25 @@
             makeTextInputHint(document.getElementById("priceFrom"), 'Цена от');
             makeTextInputHint(document.getElementById("priceTo"), 'до');
         }
-
-        function constructTitle() {
+        function addParamToUrl(url, param, value) {
+            if(url.charAt(12) !== '?') {
+                return (url + '?' + param + '=' + value);
+            } else {
+                return (url + '&' + param + '=' + value)
+            }
+        }
+        function constructTitleAndSetUrl() {
             var title = "";
+            var url = '/widget.html';
             var roomChecked = $('#room').is(':checked');
             var flatChecked = ($('#flat').is(':checked'));
             if (roomChecked != flatChecked) {
                 if (roomChecked) {
-                    title += "Комната, "
+                    title += "Комната, ";
+                    url = addParamToUrl(url, 'type', 'room')
                 } else {
-                    title += "Квартира, "
+                    title += "Квартира, ";
+                    url = addParamToUrl(url, 'type', 'flat')
                 }
             }
 
@@ -222,18 +231,22 @@
                 title += "Все города"
             } else {
                 title += choosedCity;
+                url = addParamToUrl(url, 'city', choosedCity)
             }
 
             var priceFrom = $('#priceFrom').val();
             if (priceFrom !== 'Цена от') {
                 title += ' от ' + priceFrom + ' ₽';
+                url = addParamToUrl(url, 'priceFrom', priceFrom)
             }
             var priceTo = $('#priceTo').val();
             if (priceTo !== 'до') {
                 title += ' до ' + priceTo + ' ₽';
+                url = addParamToUrl(url, 'priceTo', priceTo)
             }
 
             $('.filterValue').text(title);
+            history.pushState(null, null, url)
         }
 
         function cleanAdvertises() {
@@ -241,7 +254,7 @@
         }
 
         function applyNewFilter() {
-            constructTitle();
+            constructTitleAndSetUrl();
             cleanAdvertises();
             loadAdvertises();
         }
@@ -254,7 +267,6 @@
             {
                 var sParameterName = sURLVariables[i].split('=');
                 if (sParameterName[0] == sParam) {
-                    console.log(sParam);
                     return sParameterName[1];
                 }
 
