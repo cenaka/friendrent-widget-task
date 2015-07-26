@@ -13,13 +13,14 @@ class Advertise {
     int price;
     String desc;
     long time; // milliseconds
-    String url = "http://friendrent.ru/";
+    String url;
 
-    public Advertise(String city, Type type, int price, String desc, Date dateTime) {
+    public Advertise(String city, Type type, int price, String desc, Date dateTime, String url) {
         this.city = city;
         this.type = type;
         this.price = price;
         this.desc = desc;
         this.time = dateTime.getTime();
+        this.url = url;
     }
 }

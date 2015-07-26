@@ -12,7 +12,7 @@ import static spark.Spark.*;
 
 public class AdvertiseWebService {
     public static void main(String[] args) {
-        externalStaticFileLocation("static");
+        staticFileLocation("/static");
         get("/advertises", (request, response) -> {
             Map<String, Object> ads = new HashMap<>();
             ArrayList<Advertise> advertises = new ArrayList<>();
@@ -37,15 +37,18 @@ public class AdvertiseWebService {
                 int from = 1, to = 50000;
                 if (request.queryMap("priceTo").hasValue()) {
                     to = request.queryMap("priceTo").integerValue();
-
                 }
                 if (request.queryMap("priceFrom").hasValue()) {
                     from = request.queryMap("priceFrom").integerValue();
                 }
+                if (from > to) {
+                    break;
+                }
                 price = from + random.nextInt((to - from + 1));
                 String desc = "м. " + subwayName[random.nextInt(subwayName.length)] + ", " +
                         streetName[random.nextInt(streetName.length)] + " " + (random.nextInt(100) + 1);
-                Advertise ad = new Advertise(city, type, price, desc, new Date());
+                String url = "http://friendrent.ru/offer/" + (450000 + random.nextInt(1000));
+                Advertise ad = new Advertise(city, type, price, desc, new Date(), url);
                 advertises.add(ad);
             }
             ads.put("advertises", advertises);

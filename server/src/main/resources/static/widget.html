@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Аренда недвижимости</title>
+        <meta charset="utf-8">
+        <link href="css/style.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <p class="filterValue">Все города</p>
+        <a href="#options" id="optionsLink" class="popup">изменить</a>
+        <div id="ads">
+            <button id="moreButton">Больше</button>
+        </div>
+
+        <div id="options">
+            <div class="filterForm">
+                <h1 class="title">Настройки</h1>
+
+                <form action="" method="post" class="filterForm">
+                    <select class="citiesList">
+                        <option selected="selected">Выберите город</option>
+                        <option>Москва</option>
+                        <option>Санкт-Петербург</option>
+                        <option>Нижний Новгород</option>
+                        <option>Казань</option>
+                        <option>Ростов-на-Дону</option>
+                        <option>Волгоград</option>
+                        <option>Краснодар</option>
+                        <option>Саратов</option>
+                        <option>Самара</option>
+                        <option>Екатеринбург</option>
+                        <option>Челябинск</option>
+                        <option>Омск</option>
+                        <option>Новосибирск</option>
+                        <option>Красноярск</option>
+                        <option>Пермь</option>
+                        <option>Уфа</option>
+                    </select>
+
+                    <div class="priceNumber">
+                        <input type="text" id="priceFrom" name="priceFrom" onfocus="clickOnPriceInputHint(this);"
+                               onblur="checkIfNeedToReturnHint(this, 'Цена от');" value="Цена от" maxlength=6 class="hintInput">
+                        <input type="text" id="priceTo" name="priceTo" onfocus="clickOnPriceInputHint(this);"
+                               onblur="checkIfNeedToReturnHint(this, 'до');" value="до" maxlength= 6 class="hintInput">
+                    </div>
+                    <div class="housingType">
+                        <input type="checkbox" name="room" value="room" id='room'>
+                        <label for="room">комната</label>
+                        <input type="checkbox" name="flat" value="flat" id="flat">
+                        <label for="flat">квартира</label>
+                    </div>
+                    <input type="button" id="reset" value="Сбросить" onclick="resetForm()">
+                    <input type="button" id="submitButton" value="Применить" onclick="applyNewFilter()">
+                </form>
+            </div>
+        </div>
+    </body>
+    <script src="js/jquery-2.1.4.js" type="application/javascript"></script>
+    <script type="text/javascript" src="js/jquery.leanModal.min.js"></script>
+    <script type="application/javascript">
+
+        function addCallbacks() {
+            // Modal window creation
+            $("#optionsLink").leanModal({
+                closeButton: "#submitButton"
+            });
+
+            // only numbers permitted to write in price input
+            $('#priceFrom, #priceTo').keypress(function(e) {
+                if (e.keyCode < 48 || e.keyCode > 57) {
+                    return false;
+                }
+            });
+
+            // add callback to "More" button
+            $('#moreButton').click(loadAdvertises);
+        }
+
+        function loadAdvertises() {
+            $.getJSON("advertises", getFilterParams(), function(data) {
+                addAdvertises(data.advertises);
+            });
+        }
+
+        $(document).ready(function() {
+            addCallbacks();
+            readUrlParams();
+            applyNewFilter();
+        });
+
+        function getFilterParams() {
+            result = {};
+            var city = $('.citiesList').val();
+            if (city !== 'Выберите город') {
+                result.city = city;
+            }
+            var priceFrom = $('#priceFrom').val();
+            if (priceFrom !== "Цена от") {
+                result.priceFrom = priceFrom;
+            }
+            var priceTo = $('#priceTo').val();
+            if (priceTo !== "до") {
+                result.priceTo = priceTo;
+            }
+
+            var roomChecked = $('#room').is(':checked');
+            var flatChecked = ($('#flat').is(':checked'));
+            if (roomChecked != flatChecked) {
+                if (roomChecked) {
+                    result.type = 'room'
+                } else {
+                    result.type = 'flat'
+                }
+            }
+            result.number = 10;
+            return result
+        }
+        function createDivElement(className, textContent) {
+            var newDivElement = document.createElement('div');
+            newDivElement.className = className;
+            newDivElement.textContent = textContent;
+            return newDivElement;
+        }
+        function createAElement(target, url, textContent) {
+            var newAElement = document.createElement('a');
+            newAElement.target = target;
+            newAElement.href = url;
+            newAElement.textContent = textContent;
+            return newAElement;
+
+        }
+        function housingTypeConversion(serverType) {
+            if (serverType === 'FLAT') {
+                return ('Квартира');
+            } else if (serverType === 'ROOM') {
+                return ('Комната');
+            } else {
+                return ('??????')
+            }
+        }
+
+        function addAdvertise(advertise) {
+            var list = document.getElementById("ads");
+            var newHTMLAddvertise = document.createElement('div');
+            newHTMLAddvertise.className = 'advertise';
+            var type = createAElement('_blank', advertise.url, housingTypeConversion(advertise.type));
+            var price = createDivElement('price', advertise.price + ' ₽');
+            var desc = createDivElement('description', advertise.desc);
+            var time = createDivElement('time', new Date(advertise.time).toLocaleString("ru"));
+            newHTMLAddvertise.appendChild(type);
+            newHTMLAddvertise.appendChild(price);
+            newHTMLAddvertise.appendChild(desc);
+            newHTMLAddvertise.appendChild(time);
+            list.insertBefore(newHTMLAddvertise, document.getElementById("moreButton"));
+        }
+
+        function addAdvertises(advertises) {
+            if (advertises.length == 0) {
+                $('#moreButton').hide();
+                $('#ads').append("<p>По данному запросу объявлений нет</p>")
+                return ;
+
+            }
+            for (var i = 0; i < advertises.length; i++) {
+                addAdvertise(advertises[i]);
+            }
+
+            if (advertises.length < 10) {
+                $('#moreButton').hide();
+            } else {
+                $('#moreButton').show();
+            }
+        }
+
+
+        function clickOnPriceInputHint(element) {
+            if (element.className == 'hintInput') {
+                element.value='';
+                element.className = '';
+            }
+        }
+
+        function setPriceInputText(element, text) {
+            element.val(text);
+            element.attr("class", '');
+        }
+
+        function checkIfNeedToReturnHint(element, hintText) {
+            if (element.value === '' && element.className != 'hintInput') {
+                element.value = hintText;
+                element.className = 'hintInput';
+            }
+        }
+
+        function makeTextInputHint(element, hintText) {
+            element.value = hintText;
+            element.className = 'hintInput';
+        }
+
+        function resetForm() {
+            $('#room, #flat').val('').attr('checked', false);
+            $('select option:first').attr('selected','1');
+            makeTextInputHint(document.getElementById("priceFrom"), 'Цена от');
+            makeTextInputHint(document.getElementById("priceTo"), 'до');
+        }
+
+        function constructTitle() {
+            var title = "";
+            var roomChecked = $('#room').is(':checked');
+            var flatChecked = ($('#flat').is(':checked'));
+            if (roomChecked != flatChecked) {
+                if (roomChecked) {
+                    title += "Комната, "
+                } else {
+                    title += "Квартира, "
+                }
+            }
+
+            var choosedCity = $('.citiesList').val();
+            if (choosedCity === 'Выберите город') {
+                title += "Все города"
+            } else {
+                title += choosedCity;
+            }
+
+            var priceFrom = $('#priceFrom').val();
+            if (priceFrom !== 'Цена от') {
+                title += ' от ' + priceFrom + ' ₽';
+            }
+            var priceTo = $('#priceTo').val();
+            if (priceTo !== 'до') {
+                title += ' до ' + priceTo + ' ₽';
+            }
+
+            $('.filterValue').text(title);
+        }
+
+        function cleanAdvertises() {
+            $('#ads').children().not('#moreButton').remove();
+        }
+
+        function applyNewFilter() {
+            constructTitle();
+            cleanAdvertises();
+            loadAdvertises();
+        }
+
+        function getUrlParameter(sParam)
+        {
+            var sPageURL = decodeURI(window.location.search.substring(1));
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++)
+            {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    console.log(sParam);
+                    return sParameterName[1];
+                }
+
+            }
+        }
+
+        function readTypeUrlParam() {
+            var type = getUrlParameter('type');
+            if (type === 'room' || type == 'flat') {
+                $('#' + type).val('').attr('checked', true);
+            }
+        }
+
+        function readPriceUrlParam(id) {
+            var price = getUrlParameter(id);
+            if (isNumeric(price)) {
+                setPriceInputText($('#' + id), price)
+            }
+        }
+
+        function readCityUrlParam() {
+            var city = getUrlParameter('city');
+            if (!city) {
+                return
+            }
+            index = citiesListIndex(city.toLowerCase());
+            if (index >= 0) {
+                $('.citiesList :nth-child(' + (index + 1) + ')').prop('selected', true);
+            }
+        }
+
+        function readUrlParams() {
+            readTypeUrlParam();
+            readPriceUrlParam('priceFrom');
+            readPriceUrlParam('priceTo');
+            readCityUrlParam();
+        }
+
+        function isNumeric(sParam) {
+            return !isNaN(parseInt(sParam)) && isFinite(sParam);
+        }
+
+        function citiesListIndex(city) {
+            list = [];
+            $(".citiesList option").each(function()
+            {
+                list.push($(this).val().toLowerCase())
+            });
+            return $.inArray(city, list)
+        }
+
+
+    </script>
+</html>
